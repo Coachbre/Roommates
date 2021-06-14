@@ -109,12 +109,8 @@ namespace Roommates.Repositories
                         room =
                             new Room {
                                 Id = id,
-                                Name =
-                                    reader.GetString(reader.GetOrdinal("Name")),
-                                MaxOccupancy =
-                                    reader
-                                        .GetInt32(reader
-                                            .GetOrdinal("MaxOccupancy"))
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                MaxOccupancy = reader.GetInt32(reader.GetOrdinal("MaxOccupancy"))
                             };
                     }
 
@@ -130,6 +126,7 @@ namespace Roommates.Repositories
         ///   NOTE: This method sends data to the database,
         ///   it does not get anything from the database, so there is nothing to return.
         /// </summary>
+        /* <summary> tags within triple slashes (///) inserts description/info into methods when you hover. ex: Insert(), Open() */
         public void Insert(Room room)
         {
             using (SqlConnection conn = Connection)
@@ -141,6 +138,7 @@ namespace Roommates.Repositories
                         @"INSERT INTO Room (Name, MaxOccupancy) 
                                          OUTPUT INSERTED.Id 
                                          VALUES (@name, @maxOccupancy)";
+                                         /*line 138: output the id that was just inserted */
                     cmd.Parameters.AddWithValue("@name", room.Name);
                     cmd
                         .Parameters

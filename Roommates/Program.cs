@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Roommates.Models;
+using Roommates.Repositories;
 
 namespace Roommates
 {

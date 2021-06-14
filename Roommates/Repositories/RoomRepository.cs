@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Roommates.Models;
-using System.Collections.Generic;
 
 namespace Roommates.Repositories
 {
@@ -13,7 +13,10 @@ namespace Roommates.Repositories
         /// <summary>
         ///  When new RoomRepository is instantiated, pass the connection string along to the BaseRepository
         /// </summary>
-        public RoomRepository(string connectionString) : base(connectionString) { }
+        public RoomRepository(string connectionString) :
+            base(connectionString)
+        {
+        }
 
         // ...We'll add some methods shortly...
         /// <summary>
@@ -57,19 +60,21 @@ namespace Roommates.Repositories
                         int nameColumnPosition = reader.GetOrdinal("Name");
                         string nameValue = reader.GetString(nameColumnPosition);
 
-                        int maxOccupancyColumPosition = reader.GetOrdinal("MaxOccupancy");
-                        int maxOccupancy = reader.GetInt32(maxOccupancyColumPosition);
+                        int maxOccupancyColumPosition =
+                            reader.GetOrdinal("MaxOccupancy");
+                        int maxOccupancy =
+                            reader.GetInt32(maxOccupancyColumPosition);
 
                         // Now let's create a new room object using the data from the database.
-                        Room room = new Room
-                        {
-                            Id = idValue,
-                            Name = nameValue,
-                            MaxOccupancy = maxOccupancy,
-                        };
+                        Room room =
+                            new Room {
+                                Id = idValue,
+                                Name = nameValue,
+                                MaxOccupancy = maxOccupancy
+                            };
 
                         // ...and add that room object to our list.
-                        rooms.Add(room);
+                        rooms.Add (room);
                     }
 
                     // We should Close() the reader. Unfortunately, a "using" block won't work here.
@@ -81,5 +86,43 @@ namespace Roommates.Repositories
             }
         }
 
+        /// <summary>
+        ///  Returns a single room with the given id.
+        /// </summary>
+        public Room GetById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText =
+                        "SELECT Name, MaxOccupancy FROM Room WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    Room room = null;
+
+                    // If we only expect a single row back from the database, we don't need a while loop.
+                    if (reader.Read())
+                    {
+                        room =
+                            new Room {
+                                Id = id,
+                                Name =
+                                    reader.GetString(reader.GetOrdinal("Name")),
+                                MaxOccupancy =
+                                    reader
+                                        .GetInt32(reader
+                                            .GetOrdinal("MaxOccupancy"))
+                            };
+                    }
+
+                    reader.Close();
+
+                    return room;
+                }
+            }
+        }
     }
 }

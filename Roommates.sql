@@ -8,7 +8,7 @@ use [Roommates]
 go
 
 
-
+[MusicHistory]
 DROP TABLE IF EXISTS RoommateChore;
 DROP TABLE IF EXISTS Chore;
 DROP TABLE IF EXISTS Roommate;

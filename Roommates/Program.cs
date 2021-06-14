@@ -44,51 +44,68 @@ namespace Roommates
                         break;
 
                     case ("Add a room"):
-                        // Do stuff
+                        Console.Write("Room name: ");
+                        string name = Console.ReadLine();
+
+                        Console.Write("Max occupancy: ");
+                        int max = int.Parse(Console.ReadLine());
+
+                        Room roomToAdd = new Room()
+                        {
+                            Name = name,
+                            MaxOccupancy = max
+                        };
+
+                        roomRepo.Insert(roomToAdd);
+
+                        Console.WriteLine($"{roomToAdd.Name} has been added and assigned an Id of {roomToAdd.Id}");
+                        Console.Write("Press any key to continue");
+                        Console.ReadKey();
                         break;
-                    case ("Exit"):
-                        runProgram = false;
-                        break;
+
+                        case ("Exit"):
+                            runProgram = false;
+                            break;
+                    }
                 }
+
+
             }
 
-
-        }
-
-        static string GetMenuSelection()
-        {
-            Console.Clear();
-
-            List<string> options = new List<string>()
+            static string GetMenuSelection()
             {
-                "Show all rooms",
-                "Search for room",
-                "Add a room",
-                "Exit"
-            };
+                Console.Clear();
 
-            for (int i = 0; i < options.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {options[i]}");
-            }
-
-            while (true)
-            {
-                try
+                List<string> options = new List<string>()
                 {
-                    Console.WriteLine();
-                    Console.Write("Select an option > ");
+                    "Show all rooms",
+                    "Search for room",
+                    "Add a room",
+                    "Exit"
+                };
 
-                    string input = Console.ReadLine();
-                    int index = int.Parse(input) - 1;
-                    return options[index];
+                for (int i = 0; i < options.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {options[i]}");
                 }
-                catch (Exception)
-                {
 
-                    continue;
+                while (true)
+                {
+                    try
+                    {
+                        Console.WriteLine();
+                        Console.Write("Select an option > ");
+
+                        string input = Console.ReadLine();
+                        int index = int.Parse(input) - 1;
+                        return options[index];
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
                 }
             }
         }
     }
-}
